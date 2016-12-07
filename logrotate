@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use POSIX qw(strftime);
+
+my $LOG_FILE = "wrapper.log";
+my $LOG_TIME = "\%Y\%m\%d";
+
+my $new_date = strftime "$LOG_TIME", localtime;
+my $old_date = $new_date;
+open FILE, ">> $LOG_FILE.$new_date";
+
+my $line;
+foreach $line (<STDIN>) {
+    $new_date = strftime "$LOG_TIME", localtime;
+    if ($old_date ne $new_date) {
+        $old_date = $new_date;
+        open FILE, ">> $LOG_FILE.$new_date";
+    }
+    print FILE "$line";
+}
